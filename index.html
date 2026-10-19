@@ -51,7 +51,7 @@
     // ข้อความสลับกัน
     const textList = ["ศศิ", "รักเธอ"];
     const heartParticles = [];
-    const totalHeartPoints = 95; // ปรับลดจำนวนลงเพื่อให้ห่างพอดี ไม่ซ้อนทับกันเกินไป
+    const totalHeartPoints = 90; // จำนวนจุดกำลังพอดี ไม่หนาแน่นจนเกินไป
 
     for (let i = 0; i < totalHeartPoints; i++) {
         const t = (Math.PI * 2 / totalHeartPoints) * i - Math.PI / 2;
@@ -61,13 +61,13 @@
             baseX: pos.x,
             baseY: pos.y,
             text: textList[i % textList.length], // สลับคำว่า ศศิ กับ รักเธอ
-            size: 20, // ขยายขนาดตัวหนังสือให้ใหญ่ขึ้น ชัดเจนขึ้น
+            size: 20, // ขยายตัวหนังสือใหญ่ชัดเจน
             alpha: 0
         });
     }
 
-    // ละอองเรืองแสงรอบๆ สดใสพอประมาณ
-    const sparkleCount = 30;
+    // ละอองเรืองแสงรอบๆ
+    const sparkleCount = 25;
     const sparkles = [];
     for (let i = 0; i < sparkleCount; i++) {
         const t = Math.random() * Math.PI * 2;
@@ -76,7 +76,7 @@
             baseX: pos.x + (Math.random() - 0.5) * 5,
             baseY: pos.y + (Math.random() - 0.5) * 5,
             text: textList[i % textList.length],
-            size: 14,
+            size: 13,
             alpha: Math.random(),
             speed: Math.random() * 0.02 + 0.01
         });
@@ -86,8 +86,8 @@
     let pulse = 0;
 
     function draw() {
-        // ล้างหน้าจอด้วยสีดำสนิท
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+        // ล้างหน้าจอเป็นสีดำสนิท 100% ทุกเฟรม เพื่อไม่ให้เงามืดชมพูสะสมบนพื้นหลัง
+        ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         const centerX = canvas.width / 2;
@@ -95,11 +95,11 @@
         const scale = Math.min(canvas.width, canvas.height) / 42;
 
         pulse += 0.035;
-        const pulseFactor = 1 + Math.sin(pulse) * 0.03; // หัวใจเต้นเบาๆ
+        const pulseFactor = 1 + Math.sin(pulse) * 0.03; // จังหวะหัวใจเต้นเบาๆ
 
         // ค่อยๆ ขึ้นทีละตัว
         if (progress < totalHeartPoints) {
-            progress += 0.5; // จังหวะกำลังพอดี
+            progress += 0.5;
         }
 
         // 1. ละอองเรืองแสงกระจายรอบๆ
@@ -111,7 +111,7 @@
             const y = centerY + s.baseY * scale * pulseFactor;
 
             ctx.font = `bold ${s.size}px Tahoma, sans-serif`;
-            ctx.shadowBlur = 12;
+            ctx.shadowBlur = 10;
             ctx.shadowColor = '#ff2a8d';
             ctx.fillStyle = `rgba(255, 105, 180, ${Math.max(0, s.alpha * 0.6)})`;
             ctx.fillText(s.text, x, y);
@@ -128,10 +128,10 @@
 
                 ctx.font = `bold ${p.size}px Tahoma, sans-serif`;
                 
-                // เอฟเฟกต์แสงชมพูเรืองแสงบนพื้นหลังสีดำ
-                ctx.shadowBlur = 16;
-                ctx.shadowColor = `rgba(255, 20, 147, ${p.alpha})`; // Pink Neon Glow
-                ctx.fillStyle = `rgba(255, 192, 203, ${p.alpha})`;  // Soft Pink Text
+                // แสงนีออนสีชมพูบนพื้นหลังดำสนิท
+                ctx.shadowBlur = 14;
+                ctx.shadowColor = `rgba(255, 20, 147, ${p.alpha})`;
+                ctx.fillStyle = `rgba(255, 192, 203, ${p.alpha})`;
                 
                 ctx.fillText(p.text, x, y);
             }
