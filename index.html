@@ -24,7 +24,7 @@
             top: 0;
             left: 0;
         }
-        /* ปุ่มสำหรับกดเริ่มเปิดเพลงและแอนิเมชัน */
+        /* ปุ่มหน้าแรกสำหรับกดเปิดเพลงและเล่นแอนิเมชัน */
         #startOverlay {
             position: absolute;
             top: 0;
@@ -64,7 +64,7 @@
     <button id="startButton">แตะเพื่อเปิด ❤️</button>
 </div>
 
-<!-- เพลงจักรวาลไหน (ดึงไฟล์ music.mp3 ที่อัปโหลดขึ้น GitHub) -->
+<!-- ไฟล์เพลง music.mp3 -->
 <audio id="bgMusic" loop preload="auto">
     <source src="music.mp3" type="audio/mpeg">
 </audio>
@@ -80,9 +80,13 @@
 
     let isStarted = false;
 
-    // เมื่อกดปุ่มจะเริ่มเล่นเพลงและเล่นแอนิเมชัน
+    // เมื่อกดปุ่มจะเริ่มเล่นเพลงและแอนิเมชัน
     startButton.addEventListener('click', () => {
-        bgMusic.play().catch(e => console.log("Audio play failed:", e));
+        bgMusic.play().then(() => {
+            console.log("Audio playing successfully");
+        }).catch(e => {
+            console.log("Audio play failed:", e);
+        });
         
         startOverlay.style.opacity = '0';
         setTimeout(() => {
@@ -106,6 +110,8 @@
     }
 
     const textList = ["ศศิ", "รักเธอ"];
+    
+    // 1. เส้นหัวใจหลัก
     const heartParticles = [];
     const totalHeartPoints = 90;
 
@@ -122,18 +128,22 @@
         });
     }
 
-    const sparkleCount = 25;
+    // 2. ตัวอักษรเล็กๆ ระยิบระยับรอบๆ หัวใจจำนวนมาก (เพิ่มเป็น 120 จุด)
+    const sparkleCount = 120;
     const sparkles = [];
     for (let i = 0; i < sparkleCount; i++) {
         const t = Math.random() * Math.PI * 2;
         const pos = heartEquation(t);
+        // สุ่มตำแหน่งกระจายตัวเล็กๆ รอบๆ รูปหัวใจ
+        const distanceOffset = (Math.random() - 0.5) * 12;
+        
         sparkles.push({
-            baseX: pos.x + (Math.random() - 0.5) * 5,
-            baseY: pos.y + (Math.random() - 0.5) * 5,
+            baseX: pos.x + distanceOffset,
+            baseY: pos.y + distanceOffset,
             text: textList[i % textList.length],
-            size: 13,
+            size: Math.random() * 5 + 9, // ขนาดตัวหนังสือเล็กลงน่ารักๆ (9px - 14px)
             alpha: Math.random(),
-            speed: Math.random() * 0.02 + 0.01
+            speed: Math.random() * 0.03 + 0.01
         });
     }
 
@@ -141,6 +151,7 @@
     let pulse = 0;
 
     function draw() {
+        // ล้างหน้าจอด้วยสีดำสนิท
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -156,6 +167,7 @@
                 progress += 0.5;
             }
 
+            // 1. วาดตัวอักษรเล็กๆ วิ้งๆ ระยิบระยับกระพริบ
             sparkles.forEach(s => {
                 s.alpha += s.speed;
                 if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
@@ -164,12 +176,13 @@
                 const y = centerY + s.baseY * scale * pulseFactor;
 
                 ctx.font = `bold ${s.size}px Tahoma, sans-serif`;
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 12;
                 ctx.shadowColor = '#ff2a8d';
-                ctx.fillStyle = `rgba(255, 105, 180, ${Math.max(0, s.alpha * 0.6)})`;
+                ctx.fillStyle = `rgba(255, 105, 180, ${Math.max(0, s.alpha * 0.85)})`;
                 ctx.fillText(s.text, x, y);
             });
 
+            // 2. วาดเส้นหัวใจหลัก
             heartParticles.forEach((p, idx) => {
                 if (idx < progress) {
                     if (p.alpha < 1) p.alpha += 0.06;
@@ -180,7 +193,7 @@
 
                     ctx.font = `bold ${p.size}px Tahoma, sans-serif`;
                     
-                    ctx.shadowBlur = 14;
+                    ctx.shadowBlur = 16;
                     ctx.shadowColor = `rgba(255, 20, 147, ${p.alpha})`;
                     ctx.fillStyle = `rgba(255, 192, 203, ${p.alpha})`;
                     
