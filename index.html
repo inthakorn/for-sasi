@@ -62,10 +62,9 @@
     <button id="startButton">แตะเพื่อเปิด ❤️</button>
 </div>
 
-<!-- ลองใช้ลิงก์ไฟล์ MP3 สำรองขนาดเล็กเพื่อทดสอบระบบเสียง -->
+<!-- ดึงเฉพาะไฟล์ music.mp3 ที่คุณอัปโหลดขึ้น GitHub -->
 <audio id="bgMusic" loop preload="auto">
     <source src="music.mp3" type="audio/mpeg">
-    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
 </audio>
 
 <canvas id="heartCanvas"></canvas>
@@ -81,9 +80,9 @@
 
     startButton.addEventListener('click', () => {
         bgMusic.play().then(() => {
-            console.log("Playing");
+            console.log("Playing user music");
         }).catch(e => {
-            console.log("Error:", e);
+            console.log("Audio error:", e);
         });
         
         startOverlay.style.opacity = '0';
@@ -155,8 +154,9 @@
             pulse += 0.035;
             const pulseFactor = 1 + Math.sin(pulse) * 0.03;
 
+            // วนวาดรูปหัวใจขึ้นช้าๆ นุ่มนวล
             if (progress < totalHeartPoints) {
-                progress += 0.15; // ค่อยๆ วนขึ้นรูปหัวใจอย่างช้าๆ นุ่มนวล
+                progress += 0.15;
             }
 
             sparkles.forEach(s => {
