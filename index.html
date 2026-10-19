@@ -64,8 +64,9 @@
     <button id="startButton">แตะเพื่อเปิด ❤️</button>
 </div>
 
-<!-- ไฟล์เพลง music.mp3 -->
+<!-- ดึงไฟล์เพลง (รองรับทั้งชื่อ music.mp3 และ music.mp3.mp3) -->
 <audio id="bgMusic" loop preload="auto">
+    <source src="music.mp3.mp3" type="audio/mpeg">
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -128,22 +129,21 @@
         });
     }
 
-    // 2. ตัวอักษรเล็กๆ ระยิบระยับรอบๆ หัวใจจำนวนมาก (เพิ่มเป็น 120 จุด)
+    // 2. ตัวอักษรเล็กๆ ระยิบระยับรอบๆ หัวใจ
     const sparkleCount = 120;
     const sparkles = [];
     for (let i = 0; i < sparkleCount; i++) {
         const t = Math.random() * Math.PI * 2;
         const pos = heartEquation(t);
-        // สุ่มตำแหน่งกระจายตัวเล็กๆ รอบๆ รูปหัวใจ
         const distanceOffset = (Math.random() - 0.5) * 12;
         
         sparkles.push({
             baseX: pos.x + distanceOffset,
             baseY: pos.y + distanceOffset,
             text: textList[i % textList.length],
-            size: Math.random() * 5 + 9, // ขนาดตัวหนังสือเล็กลงน่ารักๆ (9px - 14px)
+            size: Math.random() * 5 + 9,
             alpha: Math.random(),
-            speed: Math.random() * 0.03 + 0.01
+            speed: Math.random() * 0.02 + 0.008
         });
     }
 
@@ -151,7 +151,6 @@
     let pulse = 0;
 
     function draw() {
-        // ล้างหน้าจอด้วยสีดำสนิท
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -163,8 +162,9 @@
             pulse += 0.035;
             const pulseFactor = 1 + Math.sin(pulse) * 0.03;
 
+            // ปรับความเร็วการขึ้นรูปหัวใจให้ช้าลง นุ่มนวลขึ้น (จาก 0.5 เหลือ 0.18)
             if (progress < totalHeartPoints) {
-                progress += 0.5;
+                progress += 0.18;
             }
 
             // 1. วาดตัวอักษรเล็กๆ วิ้งๆ ระยิบระยับกระพริบ
@@ -185,7 +185,7 @@
             // 2. วาดเส้นหัวใจหลัก
             heartParticles.forEach((p, idx) => {
                 if (idx < progress) {
-                    if (p.alpha < 1) p.alpha += 0.06;
+                    if (p.alpha < 1) p.alpha += 0.04; // ค่อยๆ สว่างขึ้นอย่างช้าๆ
 
                     const currentScale = scale * pulseFactor;
                     const x = centerX + p.baseX * currentScale;
