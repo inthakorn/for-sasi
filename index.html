@@ -62,9 +62,9 @@
     <button id="startButton">แตะเพื่อเปิด ❤️</button>
 </div>
 
-<!-- ดึงเฉพาะไฟล์ music.mp3 ที่คุณอัปโหลดขึ้น GitHub -->
+<!-- บังคับโหลดไฟล์เพลงใหม่ ป้องกันเบราว์เซอร์จำแคชเก่า -->
 <audio id="bgMusic" loop preload="auto">
-    <source src="music.mp3" type="audio/mpeg">
+    <source src="music.mp3?v=2" type="audio/mpeg">
 </audio>
 
 <canvas id="heartCanvas"></canvas>
@@ -79,10 +79,12 @@
     let isStarted = false;
 
     startButton.addEventListener('click', () => {
+        // เล่นเพลงทันทีที่มีการแตะหน้าจอ
         bgMusic.play().then(() => {
             console.log("Playing user music");
         }).catch(e => {
             console.log("Audio error:", e);
+            alert("ไม่สามารถเล่นเพลงได้ โปรดตรวจสอบชื่อไฟล์ music.mp3 บน GitHub");
         });
         
         startOverlay.style.opacity = '0';
@@ -154,7 +156,6 @@
             pulse += 0.035;
             const pulseFactor = 1 + Math.sin(pulse) * 0.03;
 
-            // วนวาดรูปหัวใจขึ้นช้าๆ นุ่มนวล
             if (progress < totalHeartPoints) {
                 progress += 0.15;
             }
