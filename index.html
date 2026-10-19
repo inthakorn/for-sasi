@@ -24,7 +24,7 @@
             top: 0;
             left: 0;
         }
-        /* ปุ่มหน้าแรกสำหรับกดเปิดเพลงและเล่นแอนิเมชัน */
+        /* หน้าต่างปุ่มกดเริ่มต้น */
         #startOverlay {
             position: absolute;
             top: 0;
@@ -64,9 +64,8 @@
     <button id="startButton">แตะเพื่อเปิด ❤️</button>
 </div>
 
-<!-- ดึงไฟล์เพลง (รองรับทั้งชื่อ music.mp3 และ music.mp3.mp3) -->
+<!-- ไฟล์เพลง music.mp3 -->
 <audio id="bgMusic" loop preload="auto">
-    <source src="music.mp3.mp3" type="audio/mpeg">
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -81,7 +80,7 @@
 
     let isStarted = false;
 
-    // เมื่อกดปุ่มจะเริ่มเล่นเพลงและแอนิเมชัน
+    // กดปุ่มเพื่อเริ่มเล่นเพลงและเล่นแอนิเมชัน
     startButton.addEventListener('click', () => {
         bgMusic.play().then(() => {
             console.log("Audio playing successfully");
@@ -103,7 +102,7 @@
     window.addEventListener('resize', resize);
     resize();
 
-    // สมการคณิตศาสตร์สร้างรูปหัวใจ
+    // สมการคณิตศาสตร์รูปหัวใจ
     function heartEquation(t) {
         const x = 16 * Math.pow(Math.sin(t), 3);
         const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
@@ -129,7 +128,7 @@
         });
     }
 
-    // 2. ตัวอักษรเล็กๆ ระยิบระยับรอบๆ หัวใจ
+    // 2. ตัวอักษรเล็กๆ วิ้งๆ ระยิบระยับรอบๆ
     const sparkleCount = 120;
     const sparkles = [];
     for (let i = 0; i < sparkleCount; i++) {
@@ -162,12 +161,12 @@
             pulse += 0.035;
             const pulseFactor = 1 + Math.sin(pulse) * 0.03;
 
-            // ปรับความเร็วการขึ้นรูปหัวใจให้ช้าลง นุ่มนวลขึ้น (จาก 0.5 เหลือ 0.18)
+            // ค่อยๆ ขึ้นรูปหัวใจทีละช้าๆ (ช้าลงอย่างนุ่มนวล)
             if (progress < totalHeartPoints) {
-                progress += 0.18;
+                progress += 0.15;
             }
 
-            // 1. วาดตัวอักษรเล็กๆ วิ้งๆ ระยิบระยับกระพริบ
+            // 1. ตัวอักษรเล็กๆ วิ้งๆ กระพริบระยิบระยับ
             sparkles.forEach(s => {
                 s.alpha += s.speed;
                 if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
@@ -185,7 +184,7 @@
             // 2. วาดเส้นหัวใจหลัก
             heartParticles.forEach((p, idx) => {
                 if (idx < progress) {
-                    if (p.alpha < 1) p.alpha += 0.04; // ค่อยๆ สว่างขึ้นอย่างช้าๆ
+                    if (p.alpha < 1) p.alpha += 0.03; // ค่อยๆ สว่างขึ้นอย่างช้าๆ
 
                     const currentScale = scale * pulseFactor;
                     const x = centerX + p.baseX * currentScale;
